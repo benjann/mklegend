@@ -96,5 +96,8 @@ plot region. A workaround is provided by the `addplot` command:
 
 Main changes:
 
+    06jun2026 (version 1.0.1)
+    - areas were not plotted correctly in Stata 14; this is fixed
+
     06jun2026 (version 1.0.0)
     - released on GitHub

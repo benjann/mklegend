@@ -1,4 +1,4 @@
-*! version 1.0.0  06jun2026  Ben Jann
+*! version 1.0.1  06jun2026  Ben Jann
 
 program mklegend, rclass
     version 14
@@ -45,7 +45,7 @@ program mklegend, rclass
         local fr_b = `fr_y' - `fr_h'
         local fr_r = `fr_x' + `fr_w'
         local legend (scatteri `fr_b' `fr_x' `fr_b' `fr_r' `fr_y' `fr_r'/*
-            */ `fr_y' `fr_x', recast(area) `fr_opts')
+            */ `fr_y' `fr_x', recast(area) nodropbase `fr_opts')
     }
     
     // create keys
@@ -226,7 +226,7 @@ program parse_sym
             else {
                 local ptype "`sym'"
                 local plot scatteri `b' `l' `b' `r' `t' `r' `t' `l',/*
-                    */ recast(area)
+                    */ recast(area) nodropbase
             }
         }
         else {
