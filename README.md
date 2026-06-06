@@ -35,7 +35,7 @@ The following example illustrates how to add a legend using the `addplot()` opti
 
     sysuse auto
     mklegend y=4600 h=200 x=145 w=5, frame(w(35)): ///
-           ()                                    "data" ///
+           () "data" ///
         || (area, astyle(ci)) (line, pstyle(p2)) "lopoly fit and 95% CI"
     lpoly weight length, degree(1) ci legend(off) addplot(`r(legend)')
 
@@ -68,7 +68,7 @@ The following example illustrates how headings can be created.
 
 The `addplot` command ([Jann 2015](https://doi.org/10.1177/1536867X1501500308); type
 `ssc install addplot` to install the command) can be used to add a legend
-after a graph has been created. Here is an example. This can be useful, for example,
+after a graph has been created. This can be useful, for example,
 if a graph has been created using `graph combine`, as in the following example.
 
     sysuse auto
