@@ -13,6 +13,12 @@ To install `mklegend` from GitHub, type
 
     . net install mklegend, replace from(https://raw.githubusercontent.com/benjann/mklegend/main/)
 
+The `addlegend` command, which is part of the `mklegend` package, requires
+`addplot` ([Jann 2015](https://doi.org/10.1177/1536867X1501500308)). To install
+`addplot`, type
+
+    . ssc install addplot, replace
+
 ---
 
 Examples:
