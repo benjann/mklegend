@@ -14,7 +14,7 @@ To install `mklegend` from GitHub, type
     . net install mklegend, replace from(https://raw.githubusercontent.com/benjann/mklegend/main/)
 
 The `addlegend` command, which is part of the `mklegend` package, requires
-`addplot` ([Jann 2015](https://doi.org/10.1177/1536867X1501500308)). To install
+[`addplot`](https://doi.org/10.1177/1536867X1501500308). To install
 `addplot`, type
 
     . ssc install addplot, replace
@@ -75,7 +75,7 @@ The following example illustrates how headings can be created.
 Use the `addlegend` command, which is part of the `mklegend` package, to create
 a legend and add it directly to a graph that already exists in memory.
 `addlegend` makes use of command `addplot` 
-([Jann 2015](https://doi.org/10.1177/1536867X1501500308)), which needs to be installed
+[`addplot`](https://doi.org/10.1177/1536867X1501500308), which needs to be installed
 on the system (type `ssc install addplot`). An example is as follows.
 
     sysuse auto
