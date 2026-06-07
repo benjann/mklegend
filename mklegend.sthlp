@@ -1,5 +1,5 @@
 {smcl}
-{* 06jun2026}{...}
+{* 07jun2026}{...}
 {hi:help mklegend}{...}
 {right:{browse "https://github.com/benjann/mklegend/"}}
 {hline}
@@ -12,10 +12,15 @@
 {title:Syntax}
 
 {p 8 15 2}
-    {cmd:mklegend} [{it:dimexp}] [{cmd:,}
-    {cmdab:fr:ame}[{cmd:(}{it:{help mklegend##frame:subopts}}{cmd:)}]
-    {opt lskip(#)} {it:{help mklegend##sopts:symopts}}
-    {it:{help mklegend##topts:txtopts}} ] {cmd::} {it:keylist}
+    {cmd:mklegend} [{it:dimexp}]
+    [{cmd:,} {it:{help mklegend##opts:options}} ]
+    {cmd::} {it:keylist}
+
+{p 8 15 2}
+    {cmd:addlegend} [{it:dimexp}]
+    [{cmd:,} {it:{help mklegend##aopts:addopts}}
+    {it:{help mklegend##opts:options}} ]
+    {cmd::} {it:keylist}
 
 {pstd}
     where {it:dimeexp} is either
@@ -78,7 +83,7 @@
 
 
 {synoptset 23 tabbed}{...}
-{marker opt}{synopthdr:options}
+{marker opts}{synopthdr:options}
 {synoptline}
 {syntab :{it:{help mklegend##options:Main}}}
 {synopt :{cmdab:fr:ame}[{cmd:(}{it:{help mklegend##frame:subopts}}{cmd:)}]}draw
@@ -111,6 +116,21 @@
 {synopt :{opt tx(#)}}horizontal position of text, relative to symbol
     {p_end}
 {synopt :{opth t:ext(textbox_options)}}options affecting look of text
+    {p_end}
+{synoptline}
+
+{synoptset 23}{...}
+{marker aopts}{...}
+{synopt :{it:{help mklegend##addopts:addopts}}}Description{p_end}
+{synoptset 23 tabbed}{...}
+{synoptline}
+{synopt :{opth m:argin(marginstyle)}}reset margin of graph region
+    {p_end}
+{synopt :{opt graph(graphname)}}name of graph to be modified
+    {p_end}
+{synopt :{opth plot:s(numlist)}}subgraph(s) to be modified
+    {p_end}
+{synopt :{opt nodraw}}do not update graph window
     {p_end}
 {synoptline}
 
@@ -157,6 +177,18 @@
     the options within {it:symboldef} to apply custom settings to (a part of) a
     key's symbol only, without affecting subsequent keys or the key's overall
     positioning.
+
+{pstd}
+    {cmd:addlegend} is a wrapper that calls {cmd:mklegend} to create a legend
+    and then adds the legend to an existing graph using the {helpb addplot}
+    command ({browse "https://doi.org/10.1177/1536867X1501500308":Jann 2015}). The
+    legend from Stata's {helpb legend_option:legend()} option will be
+    removed. {cmd:addlegend} requires {helpb addplot} to be installed on the
+    system; type {cmd:ssc install addplot} to install {helpb addplot}. In essence,
+    {cmd:addlegend} is equivalent to tying
+
+        {com}. mklegend {txt:{it:arguments ...}}
+        . addplot: `r(legend)', norescaling legend(off){txt}
 
 
 {marker options}{...}
@@ -255,6 +287,29 @@
     {cmd:tx()}: {cmd:placement(east)} and {cmd:justification(left)} if positive;
     {cmd:placement(west)} and {cmd:justification(right)} if negative.
 
+{marker addopts}{...}
+{dlgtab:addopts}
+
+{phang}
+    {opt margin(marginstyle)} resets the margin of the graph region; see help
+    {it:{help marginstyle}}. This is useful if you want to place the legend in
+    the margin of the graph instead of in the plot region.
+
+{phang}
+    {opt graph(graphname)} selects the memory graph to be modified. The default
+    is to modify the current (topmost) graph.
+
+{phang}
+    {opt plot:s(numlist)} selects the subgraph(s) to be modified. This is only
+    relevant in case of a graph that has been created by {helpb graph combine}
+    or the {helpb by_option:by()} option. The default is to modify all
+    subgraphs found in the graph.
+
+{phang}
+    {opt nodraw} causes the graph data to be modified without updating the
+    display in the graph window. Use {helpb graph display}
+    to view the modified graph after applying {cmd:addlegend} with option
+    {cmd:nodraw}.
 
 {title:Examples}
 
@@ -333,27 +388,28 @@
     . {stata two (connect le_f le_m year) `r(legend)', legend(off)}
     {p_end}
 
-{dlgtab:Usage with the addplot command}
+{dlgtab:Add legend to existing graph}
 
 {pstd}
-    The {helpb addplot} command ({browse "https://doi.org/10.1177/1536867X1501500308":Jann 2015}; type
-    {cmd:ssc install addplot} to install the command) can be used to add a legend
-    after a graph has been created. Here is an example.s
+    Command {cmd:addlegend} can be used to create a legend and add it directly
+    to a graph that already exists in memory. {cmd:addlegend} makes use of
+    command {helpb addplot}
+    ({browse "https://doi.org/10.1177/1536867X1501500308":Jann 2015}), which
+    needs to be installed on the system (type {cmd:ssc install addplot}). An
+    example is as follows.
 
         . {stata sysuse auto}
 {p 8 12 2}
-    . {stata scatter mpg trunk weight, legend(off)}
+    . {stata scatter mpg trunk weight}
     {p_end}
 {p 8 12 2}
-    . {stata `"mklegend y=35 x=4000 h=2 w=100, frame(w(900)): () "Mileage per gallon" || () "Trunk space""'}
-    {p_end}
-{p 8 12 2}
-    . {stata "addplot: `r(legend)', norescaling"}
+    . {stata `"addlegend y=35 x=4000 h=2 w=100, frame(w(900)): () "Mileage per gallon" || () "Trunk space""'}
     {p_end}
 
 {pstd}
-    Command {helpb addplot} is particularly in case of a graph that has been
-    created using {help graph combine}, as in the following example.
+    Note that {cmd:addlegend} removes the existing default legend. In case of a graph
+    that contains multiple subgraphs, use option {cmd:plot()} to select the subgraph
+    to which the legend should be added. Example:
 
         . {stata sysuse auto}
 {p 8 12 2}
@@ -366,38 +422,50 @@
     . {stata graph combine weight price}
     {p_end}
 {p 8 12 2}
-    . {stata `"mklegend y=37 x=3500 h=1.5 w=150, frame(w(1700)): () "Mileage per gallon" || () "Trunk space""'}
-    {p_end}
-{p 8 12 2}
-    . {stata "addplot 1: `r(legend)', norescaling"}
+    . {stata `"addlegend y=37 x=3500 h=1.5 w=150, plot(1) frame(w(1700)): () "Mileage per gallon" || () "Trunk space""'}
     {p_end}
 
 {dlgtab:Placing the legend outside of the plot region}
 
 {pstd}
-    A limitation of {cmd:mklegend} is that it can only place the legend within the
-    plot region. A workaround is provided by the {help addplot} command. Here is an
+    A limitation of {cmd:mklegend} is that it can only place the legend within
+    the plot region. A workaround is provided by the {helpb addplot} command,
+    which allows adding elements to a plot using coordinates that lie outside
+    of the range of the displayed axes. You must make sure, however, that there
+    is sufficient space for the legend in the graph's margin. Here is an
     example.
 
         . {stata sysuse auto}
 {p 8 12 2}
-    . {stata scatter mpg trunk weight, legend(off) graphregion(margin(r=40)) nodraw}
+    . {stata scatter mpg trunk weight, legend(off)}
     {p_end}
 {p 8 12 2}
     . {stata `"mklegend y=5 x=5100 h=2 w=100: () "Mileage per gallon" || () "Trunk space""'}
     {p_end}
 {p 8 12 2}
-    . {stata "addplot: `r(legend)', norescaling"}
+    . {stata "addplot: `r(legend)', norescaling graphregion(margin(r=40))"}
+    {p_end}
+
+{pstd}
+    The same result can be achieved by using option {cmd:margin()} in the
+    {cmd:addlegend} command:
+
+        . {stata sysuse auto}
+{p 8 12 2}
+    . {stata scatter mpg trunk weight}
+    {p_end}
+{p 8 12 2}
+    . {stata `"addlegend y=5 x=5100 h=2 w=100, margin(r=40): () "Mileage per gallon" || () "Trunk space""'}
     {p_end}
 
 
 {title:Returned results}
 
 {pstd}
-    {cmd:mklegend} stores the generated code in macro {cmd:r(legend)}. If option
-    {cmd:frame} is specified, {cmd:mklegend} additionally stores the coordinates
-    of the frame in scalars {cmd:r(fs_y)}, {cmd:r(fs_x)}, {cmd:r(fs_h)}, and
-    {cmd:r(fs_w)}.
+    {cmd:mklegend} and {cmd:addlegend} store the code of the legend in macro
+    {cmd:r(legend)}. In addition, if option {cmd:frame} is specified, the
+    coordinates of the frame will be stored in scalars {cmd:r(fs_y)},
+    {cmd:r(fs_x)}, {cmd:r(fs_h)}, and {cmd:r(fs_w)}.
 
 
 {title:References}

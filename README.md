@@ -66,31 +66,44 @@ The following example illustrates how headings can be created.
 
 ![example 4](/images/4.png)
 
-The `addplot` command ([Jann 2015](https://doi.org/10.1177/1536867X1501500308); type
-`ssc install addplot` to install the command) can be used to add a legend
-after a graph has been created. This can be useful, for example,
-if a graph has been created using `graph combine`, as in the following example.
+Use the `addlegend` command, which is part of the `mklegend` package, to create
+a legend and add it directly to a graph that already exists in memory.
+`addlegend` makes use of command `addplot` 
+([Jann 2015](https://doi.org/10.1177/1536867X1501500308)), which needs to be installed
+on the system (type `ssc install addplot`). An example is as follows.
+
+    sysuse auto
+    scatter mpg trunk weight
+    addlegend y=35 x=4000 h=2 w=100, frame(w(900)): ///
+           () "Mileage per gallon" ///
+        || () "Trunk space"
+
+![example 5](/images/5.png)
+
+In case of a graph that contains multiple subgraphs, use option `plot()` to select
+the subgraph to which the legend should be added:
 
     sysuse auto
     scatter mpg trunk weight, legend(off) name(weight, replace)
     scatter mpg trunk price, legend(off) name(price, replace)
     graph combine weight price
-    mklegend y=37 x=3500 h=1.5 w=150, frame(w(1700)): ///
+    addlegend y=37 x=3500 h=1.5 w=150, plot(1) frame(w(1700)): ///
            () "Mileage per gallon" ///
         || () "Trunk space"
-    addplot 1: `r(legend)', norescaling
-
-![example 5](/images/5.png)
-
-A limitation of `mklegend` is that it can only place the legend within the
-plot region. A workaround is provided by the `addplot` command:
-
-    sysuse auto
-    scatter mpg trunk weight, legend(off) graphregion(margin(r=40))
-    mklegend y=5 x=5100 h=2 w=100: () "Mileage per gallon" || () "Trunk space"
-    addplot: `r(legend)', norescaling
 
 ![example 6](/images/6.png)
+
+The `addlegend` command can place the legend outside of the plot region,
+but you must make sure that there is sufficient space in the graph's margin.
+Use option `margin()` for this purpose:
+
+    sysuse auto
+    scatter mpg trunk weight
+    addlegend y=5 x=5100 h=2 w=100, margin(r=40): ///
+           () "Mileage per gallon" ///
+        || () "Trunk space"
+
+![example 7](/images/7.png)
 
 ---
 
