@@ -1,6 +1,10 @@
 # mklegend
 Stata utility to create code for a custom legend
 
+> [!IMPORTANT]
+> Development of `mklegend` has been discontinued in favor of the new
+> [`addlegend`](https://github.com/benjann/addlegend) package.
+
 `mklegend` is a utility to create a do-it-yourself legend using 
 `twoway scatteri` rather than Stata's `legend()` option. The code created by `mklegend`
 is stored in `r(legend)` that can then be pasted into a `twoway` command or an
@@ -30,7 +34,7 @@ include it in a `twoway` command.
     mklegend 40 45, frame: ///
            (Oh X, msize(large)) "Observations" ///
         || (line)               "Linear fit"
-    twoway (sc mpg turn, msize(large) ms(Oh)) ///
+    two (sc mpg turn, msize(large) ms(Oh)) ///
         (sc mpg turn, msize(large) ms(X) pstyle(p1)) ///
         (lfit mpg turn, pstyle(p2)) ///
         `r(legend)', legend(off)
@@ -114,6 +118,12 @@ Use option `margin()` for this purpose:
 ---
 
 Main changes:
+
+    14jun2026
+    - package relaunched as addlegend
+
+    07jun2026
+    - command -addlegend- added
 
     06jun2026 (version 1.0.1)
     - areas were not plotted correctly in Stata 14; this is fixed
